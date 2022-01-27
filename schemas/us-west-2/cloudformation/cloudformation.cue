@@ -7,13 +7,13 @@ package cloudformation
 
 #Template: {
   AWSTemplateFormatVersion: "2010-09-09"
-  Description: string
-  Metadata: {...}
-  Parameters: {...}
-  Rules: {...}
-  Mappings: {...}
-  Conditions: {...}
-  Transform: {...}
+  Description?: string
+  Metadata?: {...}
+  Parameters?: {...}
+  Rules?: {...}
+  Mappings?: {...}
+  Conditions?: {...}
+  Transform?: {...}
   Resources: {...}
-  Outputs: {...}
+  Outputs?: {...}
 }
