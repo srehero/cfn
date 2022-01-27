@@ -1,4 +1,4 @@
-package cloudformation
+package CloudFormation
 
 #Resource: {
   Type: string
