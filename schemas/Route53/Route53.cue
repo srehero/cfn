@@ -5,5 +5,5 @@ import (
 )
 
 #HostedZone: CloudFormation.#Resource & {
-  Type: "AWS::Route53::HostedZone"
+	Type: "AWS::Route53::HostedZone"
 }

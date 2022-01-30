@@ -5,5 +5,5 @@ import (
 )
 
 #Certificate: CloudFormation.#Resource & {
-  Type: "AWS::CertificateManager::Certificate"
+	Type: "AWS::CertificateManager::Certificate"
 }
