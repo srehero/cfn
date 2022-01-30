@@ -1,7 +1,7 @@
 package Route53
 
 import (
-  "github.com/srehero/cfn-cue/schemas/CloudFormation"
+	"github.com/srehero/cfn/schemas/CloudFormation"
 )
 
 #HostedZone: CloudFormation.#Resource & {

@@ -1,7 +1,7 @@
 package CertificateManager
 
 import (
-  "github.com/srehero/cfn-cue/schemas/CloudFormation"
+	"github.com/srehero/cfn/schemas/CloudFormation"
 )
 
 #Certificate: CloudFormation.#Resource & {
