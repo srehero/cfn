@@ -1,1 +1,1 @@
-module: "github.com/srehero/cfn-cue"
+module: "github.com/srehero/cfn"
