@@ -7,3 +7,7 @@ import (
 #HostedZone: CloudFormation.#Resource & {
 	Type: "AWS::Route53::HostedZone"
 }
+
+#RecordSet: CloudFormation.#Resource & {
+	Type: "AWS::Route53::RecordSet"
+}
