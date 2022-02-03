@@ -2,6 +2,7 @@ package CloudFormation
 
 #Resource: {
 	Type: string
+	DependsOn?: string
 	Properties: {...}
 }
 
