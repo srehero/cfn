@@ -1,0 +1,13 @@
+# This is the top-most Editor Config file
+root = true
+
+# Require Unix-style newlines, cleanup whitespace
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# CUE formatting rules
+[*.cue]
+indent_style = tab
+insert_size = 4
