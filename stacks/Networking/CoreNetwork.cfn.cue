@@ -4,6 +4,7 @@ import (
 	"strings"
 	"github.com/srehero/cfn/schemas/CloudFormation"
 	"github.com/srehero/cfn/schemas/EC2"
+	"github.com/srehero/cfn/schemas/IAM"
 )
 
 #CoreNetwork: CloudFormation.#Template & {
@@ -52,6 +53,9 @@ import (
 	Resources: {
 		// DHCPOptions?
 		// VPCDHCPOptionsAssociation?
+		// VPCFlowLogsRole
+		// VPCFlowLogsLogGroup
+		// VPCFlowLogsToCloudWatch
 
 		VPC: EC2.#VPC & {
 			Properties: {
@@ -84,12 +88,36 @@ import (
 
 		for Id, Props in #Env.PublicSubnets {
 			let subnet_name = "${AWS::StackName}-\(Props.Role)-subnet-\(strings.ToLower(Id))"
+			let nat_gateway_name = "${AWS::StackName}-nat-gateway-\(strings.ToLower(Props.AZ))"
+
+			"NatGateway\(Props.AZ)EIP": EC2.#EIP & {
+				DependsOn: "VPCGatewayAttachment"
+				Properties: {
+					Domain: "vpc"
+					Tags: [{
+						Key: "Name"
+						Value: "Fn::Sub": nat_gateway_name
+					}]
+				}
+			}
+
+			"NatGateway\(Props.AZ)": EC2.#NatGateway & {
+				Properties: {
+					AllocationId: "Fn::GetAtt": "NatGateway\(Props.AZ)EIP.AllocationId"
+					SubnetId: Ref: "PublicSubnet\(Id)"
+					Tags: [{
+						Key: "Name"
+						Value: "Fn::Sub": nat_gateway_name
+					}]
+				}
+			}
 
 			"PublicSubnet\(Id)": EC2.#Subnet & {
 				Properties: {
 					VpcId: Ref: "VPC"
 					CidrBlock:        Props.Cidr
 					AvailabilityZone: Props.AZ
+					MapPublicIpOnLaunch: true
 					Tags: [{
 						Key: "Name"
 						Value: "Fn::Sub": "${AWS::StackName}-\(Props.Role)-subnet-\(strings.ToLower(Id))"
@@ -104,6 +132,14 @@ import (
 						Key: "Name"
 						Value: "Fn::Sub": subnet_name
 					}]
+				}
+			}
+
+			"PublicSubnet\(Id)InternetGatewayRoute": EC2.#Route & {
+				Properties: {
+					RouteTableId: Ref: "PublicSubnet\(Id)RouteTable"
+					DestinationCidrBlock: "0.0.0.0/0"
+					GatewayId: Ref: "InternetGateway"
 				}
 			}
 
@@ -140,11 +176,35 @@ import (
 				}
 			}
 
+			"PrivateSubnet\(Id)NATGatewayRoute": EC2.#Route & {
+				Properties: {
+					RouteTableId: Ref: "PrivateSubnet\(Id)RouteTable"
+					DestinationCidrBlock: "0.0.0.0/0"
+					NatGatwayId: Ref: "NATGateway"
+				}
+			}
+
 			"PrivateSubnet\(Id)RouteTableAssociation": EC2.#RouteTableAssociation & {
 				Properties: {
 					SubnetId: Ref:     "PrivateSubnet\(Id)"
 					RouteTableId: Ref: "PrivateSubnet\(Id)RouteTable"
 				}
+			}
+		}
+
+		S3GatewayVPCEndpoint: EC2.#VPCEndpoint & {
+			Properties: {
+				PolicyDocument: IAM.#PolicyDocument & {
+					Statement: [{
+						Effect: "Allow"
+						Action: "*"
+						Resource: "*"
+						Principal: "*"
+					}]
+				}
+				RouteTableIds: [ for Id, Props in #Env.PrivateSubnets { { Ref: "PrivateSubnet\(Id)RouteTable" } } ]
+				ServiceName: "Fn::Sub": "com.amazonaws.${AWS::Region}.s3"
+				VpcId: Ref: "VPC"
 			}
 		}
 	}
