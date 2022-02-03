@@ -9,12 +9,12 @@ import (
 #CoreNetwork: CloudFormation.#Template & {
 	let default_public_subnets = {
 		"1A": {
-			AZ: "A"
+			AZ:   "A"
 			Cidr: "10.0.0.0/20"
 			Role: "public"
 		}
 		"1B": {
-			AZ: "B"
+			AZ:   "B"
 			Cidr: "10.0.16.0/20"
 			Role: "public"
 		}
@@ -22,30 +22,30 @@ import (
 
 	let default_private_subnets = {
 		"1A": {
-			AZ: "A"
+			AZ:   "A"
 			Cidr: "10.0.32.0/20"
 			Role: "apps"
 		}
 		"1B": {
-			AZ: "B"
+			AZ:   "B"
 			Cidr: "10.0.48.0/20"
 			Role: "apps"
 		}
 		"2A": {
-			AZ: "A"
+			AZ:   "A"
 			Cidr: "10.0.64.0/20"
 			Role: "data"
 		}
 		"2B": {
-			AZ: "B"
+			AZ:   "B"
 			Cidr: "10.0.80.0/20"
 			Role: "data"
 		}
 	}
 
-  #Env: {
-		Name: string
-		PublicSubnets: {...} | *default_public_subnets
+	#Env: {
+		Name:           string
+		PublicSubnets:  {...} | *default_public_subnets
 		PrivateSubnets: {...} | *default_private_subnets
 	}
 
@@ -55,9 +55,9 @@ import (
 
 		VPC: EC2.#VPC & {
 			Properties: {
-				CidrBlock: "10.0.0.0/16"
-				InstanceTenancy: "default"
-				EnableDnsSupport: true
+				CidrBlock:          "10.0.0.0/16"
+				InstanceTenancy:    "default"
+				EnableDnsSupport:   true
 				EnableDnsHostnames: true
 				Tags: [{
 					Key: "Name"
@@ -77,7 +77,7 @@ import (
 
 		VPCGatewayAttachment: EC2.#VPCGatewayAttachment & {
 			Properties: {
-				VpcId: Ref: "VPC"
+				VpcId: Ref:             "VPC"
 				InternetGatewayId: Ref: "InternetGateway"
 			}
 		}
@@ -85,10 +85,10 @@ import (
 		for Id, Props in #Env.PublicSubnets {
 			let subnet_name = "${AWS::StackName}-\(Props.Role)-subnet-\(strings.ToLower(Id))"
 
-		  "PublicSubnet\(Id)": EC2.#Subnet & {
+			"PublicSubnet\(Id)": EC2.#Subnet & {
 				Properties: {
 					VpcId: Ref: "VPC"
-					CidrBlock: Props.Cidr
+					CidrBlock:        Props.Cidr
 					AvailabilityZone: Props.AZ
 					Tags: [{
 						Key: "Name"
@@ -109,7 +109,7 @@ import (
 
 			"PublicSubnet\(Id)RouteTableAssociation": EC2.#RouteTableAssociation & {
 				Properties: {
-					SubnetId: Ref: "PublicSubnet\(Id)"
+					SubnetId: Ref:     "PublicSubnet\(Id)"
 					RouteTableId: Ref: "PublicSubnet\(Id)RouteTable"
 				}
 			}
@@ -121,7 +121,7 @@ import (
 			"PrivateSubnet\(Id)": EC2.#Subnet & {
 				Properties: {
 					VpcId: Ref: "VPC"
-					CidrBlock: Props.Cidr
+					CidrBlock:        Props.Cidr
 					AvailabilityZone: Props.AZ
 					Tags: [{
 						Key: "Name"
@@ -142,7 +142,7 @@ import (
 
 			"PrivateSubnet\(Id)RouteTableAssociation": EC2.#RouteTableAssociation & {
 				Properties: {
-					SubnetId: Ref: "PrivateSubnet\(Id)"
+					SubnetId: Ref:     "PrivateSubnet\(Id)"
 					RouteTableId: Ref: "PrivateSubnet\(Id)RouteTable"
 				}
 			}
