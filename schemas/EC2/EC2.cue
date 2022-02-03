@@ -4,12 +4,24 @@ import (
 	"github.com/srehero/cfn/schemas/CloudFormation"
 )
 
+#EIP: CloudFormation.#Resource & {
+	Type: "AWS::EC2::EIP"
+}
+
 #Instance: CloudFormation.#Resource & {
 	Type: "AWS::EC2::Instance"
 }
 
 #InternetGateway: CloudFormation.#Resource & {
 	Type: "AWS::EC2::InternetGateway"
+}
+
+#NatGateway: CloudFormation.#Resource & {
+	Type: "AWS::EC2::NatGateway"
+}
+
+#Route: CloudFormation.#Resource & {
+	Type: "AWS::EC2::Route"
 }
 
 #RouteTable: CloudFormation.#Resource & {
@@ -34,6 +46,10 @@ import (
 
 #VPC: CloudFormation.#Resource & {
 	Type: "AWS::EC2::VPC"
+}
+
+#VPCEndpoint: CloudFormation.#Resource & {
+	Type: "AWS::EC2::VPCEndpoint"
 }
 
 #VPCGatewayAttachment: CloudFormation.#Resource & {
