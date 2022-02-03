@@ -83,6 +83,8 @@ import (
 		}
 
 		for Id, Props in #Env.PublicSubnets {
+			let subnet_name = "${AWS::StackName}-\(Props.Role)-subnet-\(strings.ToLower(Id))"
+
 		  "PublicSubnet\(Id)": EC2.#Subnet & {
 				Properties: {
 					VpcId: Ref: "VPC"
@@ -92,6 +94,23 @@ import (
 						Key: "Name"
 						Value: "Fn::Sub": "${AWS::StackName}-\(Props.Role)-subnet-\(strings.ToLower(Id))"
 					}]
+				}
+			}
+
+			"PublicSubnet\(Id)RouteTable": EC2.#RouteTable & {
+				Properties: {
+					VpcId: Ref: "VPC"
+					Tags: [{
+						Key: "Name"
+						Value: "Fn::Sub": subnet_name
+					}]
+				}
+			}
+
+			"PublicSubnet\(Id)RouteTableAssociation": EC2.#RouteTableAssociation & {
+				Properties: {
+					SubnetId: Ref: "PublicSubnet\(Id)"
+					RouteTableId: Ref: "PublicSubnet\(Id)RouteTable"
 				}
 			}
 		}
