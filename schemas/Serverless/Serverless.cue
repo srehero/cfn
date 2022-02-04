@@ -29,5 +29,5 @@ import (
 }
 
 #Template: CloudFormation.#Template & {
-	Transform: 'AWS::Serverless-2016-10-31'
+	Transform: "AWS::Serverless-2016-10-31"
 }
