@@ -143,7 +143,7 @@ import (
 				}
 			}
 
-			"PublicSubnet\(Id)RouteTableAssociation": EC2.#RouteTableAssociation & {
+			"PublicSubnet\(Id)RouteTableAssociation": EC2.#SubnetRouteTableAssociation & {
 				Properties: {
 					SubnetId: Ref:     "PublicSubnet\(Id)"
 					RouteTableId: Ref: "PublicSubnet\(Id)RouteTable"
@@ -184,7 +184,7 @@ import (
 				}
 			}
 
-			"PrivateSubnet\(Id)RouteTableAssociation": EC2.#RouteTableAssociation & {
+			"PrivateSubnet\(Id)RouteTableAssociation": EC2.#SubnetRouteTableAssociation & {
 				Properties: {
 					SubnetId: Ref:     "PrivateSubnet\(Id)"
 					RouteTableId: Ref: "PrivateSubnet\(Id)RouteTable"

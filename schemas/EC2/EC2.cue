@@ -28,8 +28,8 @@ import (
 	Type: "AWS::EC2::RouteTable"
 }
 
-#RouteTableAssociation: CloudFormation.#Resource & {
-	Type: "AWS::EC2::RouteTableAssociation"
+#SubnetRouteTableAssociation: CloudFormation.#Resource & {
+	Type: "AWS::EC2::SubnetRouteTableAssociation"
 }
 
 #SecurityGroup: CloudFormation.#Resource & {
