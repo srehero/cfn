@@ -10,12 +10,12 @@ import (
 #CoreNetwork: CloudFormation.#Template & {
 	let default_public_subnets = {
 		"1A": {
-			AZ:   "A"
+			AZ:   "a"
 			Cidr: "10.0.0.0/20"
 			Role: "public"
 		}
 		"1B": {
-			AZ:   "B"
+			AZ:   "b"
 			Cidr: "10.0.16.0/20"
 			Role: "public"
 		}
@@ -23,22 +23,22 @@ import (
 
 	let default_private_subnets = {
 		"1A": {
-			AZ:   "A"
+			AZ:   "a"
 			Cidr: "10.0.32.0/20"
 			Role: "apps"
 		}
 		"1B": {
-			AZ:   "B"
+			AZ:   "b"
 			Cidr: "10.0.48.0/20"
 			Role: "apps"
 		}
 		"2A": {
-			AZ:   "A"
+			AZ:   "a"
 			Cidr: "10.0.64.0/20"
 			Role: "data"
 		}
 		"2B": {
-			AZ:   "B"
+			AZ:   "b"
 			Cidr: "10.0.80.0/20"
 			Role: "data"
 		}
@@ -90,7 +90,7 @@ import (
 			let subnet_name = "${AWS::StackName}-\(Props.Role)-subnet-\(strings.ToLower(Id))"
 			let nat_gateway_name = "${AWS::StackName}-nat-gateway-\(strings.ToLower(Props.AZ))"
 
-			"NatGateway\(Props.AZ)EIP": EC2.#EIP & {
+			"NatGateway\(strings.ToUpper(Props.AZ))EIP": EC2.#EIP & {
 				DependsOn: "VPCGatewayAttachment"
 				Properties: {
 					Domain: "vpc"
@@ -101,9 +101,9 @@ import (
 				}
 			}
 
-			"NatGateway\(Props.AZ)": EC2.#NatGateway & {
+			"NatGateway\(strings.ToUpper(Props.AZ))": EC2.#NatGateway & {
 				Properties: {
-					AllocationId: "Fn::GetAtt": "NatGateway\(Props.AZ)EIP.AllocationId"
+					AllocationId: "Fn::GetAtt": "NatGateway\(strings.ToUpper(Props.AZ))EIP.AllocationId"
 					SubnetId: Ref: "PublicSubnet\(Id)"
 					Tags: [{
 						Key: "Name"
@@ -116,7 +116,7 @@ import (
 				Properties: {
 					VpcId: Ref: "VPC"
 					CidrBlock:        Props.Cidr
-					AvailabilityZone: Props.AZ
+					AvailabilityZone: "Fn::Sub": "${AWS::Region}\(strings.ToLower(Props.AZ))"
 					MapPublicIpOnLaunch: true
 					Tags: [{
 						Key: "Name"
@@ -158,7 +158,7 @@ import (
 				Properties: {
 					VpcId: Ref: "VPC"
 					CidrBlock:        Props.Cidr
-					AvailabilityZone: Props.AZ
+					AvailabilityZone: "Fn::Sub": "${AWS::Region}\(strings.ToLower(Props.AZ))"
 					Tags: [{
 						Key: "Name"
 						Value: "Fn::Sub": subnet_name
@@ -176,11 +176,11 @@ import (
 				}
 			}
 
-			"PrivateSubnet\(Id)NATGatewayRoute": EC2.#Route & {
+			"PrivateSubnet\(Id)NatGatewayRoute": EC2.#Route & {
 				Properties: {
 					RouteTableId: Ref: "PrivateSubnet\(Id)RouteTable"
 					DestinationCidrBlock: "0.0.0.0/0"
-					NatGatwayId: Ref: "NATGateway"
+					NatGatewayId: Ref: "NatGateway\(strings.ToUpper(Props.AZ))"
 				}
 			}
 
