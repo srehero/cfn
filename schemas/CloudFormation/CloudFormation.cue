@@ -14,7 +14,7 @@ package CloudFormation
 	Rules?: {...}
 	Mappings?: {...}
 	Conditions?: {...}
-	Transform?: {...}
+	Transform?: string
 	Resources: {...}
 	Outputs?: {...}
 }
