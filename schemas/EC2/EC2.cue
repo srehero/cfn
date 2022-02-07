@@ -20,6 +20,10 @@ import (
 	Type: "AWS::EC2::NatGateway"
 }
 
+#NetworkAcl: CloudFormation.#Resource & {
+	Type: "AWS::EC2::NetworkAcl"
+}
+
 #Route: CloudFormation.#Resource & {
 	Type: "AWS::EC2::Route"
 }
