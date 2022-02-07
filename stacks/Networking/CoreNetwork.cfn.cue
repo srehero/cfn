@@ -92,7 +92,7 @@ import (
 		}
 
 		for Id, Props in #Env.PublicSubnets {
-			let subnet_name = "${AWS::StackName}-\(Props.Role)-subnet-\(strings.ToLower(Id))"
+			let subnet_name = "${AWS::StackName}-\(Props.Role)-public-subnet-\(strings.ToLower(Id))"
 			let nat_gateway_name = "${AWS::StackName}-nat-gateway-\(strings.ToLower(Props.AZ))"
 
 			"NatGateway\(strings.ToUpper(Props.AZ))EIP": EC2.#EIP & {
@@ -125,7 +125,7 @@ import (
 					MapPublicIpOnLaunch: true
 					Tags: [{
 						Key: "Name"
-						Value: "Fn::Sub": "${AWS::StackName}-\(Props.Role)-subnet-\(strings.ToLower(Id))"
+						Value: "Fn::Sub": subnet_name
 					}]
 				}
 			}
@@ -157,7 +157,7 @@ import (
 		}
 
 		for Id, Props in #Env.PrivateSubnets {
-			let subnet_name = "${AWS::StackName}-\(Props.Role)-subnet-\(strings.ToLower(Id))"
+			let subnet_name = "${AWS::StackName}-\(Props.Role)-private-subnet-\(strings.ToLower(Id))"
 
 			"PrivateSubnet\(Id)": EC2.#Subnet & {
 				Properties: {
