@@ -107,6 +107,7 @@ import (
 			}
 
 			"NatGateway\(strings.ToUpper(Props.AZ))": EC2.#NatGateway & {
+				DependsOn: "VPCGatewayAttachment"
 				Properties: {
 					AllocationId: "Fn::GetAtt": "NatGateway\(strings.ToUpper(Props.AZ))EIP.AllocationId"
 					SubnetId: Ref: "PublicSubnet\(Id)"
@@ -141,6 +142,7 @@ import (
 			}
 
 			"PublicSubnet\(Id)InternetGatewayRoute": EC2.#Route & {
+				DependsOn: "VPCGatewayAttachment"
 				Properties: {
 					RouteTableId: Ref: "PublicSubnet\(Id)RouteTable"
 					DestinationCidrBlock: "0.0.0.0/0"
@@ -182,6 +184,7 @@ import (
 			}
 
 			"PrivateSubnet\(Id)NatGatewayRoute": EC2.#Route & {
+				DependsOn: "VPCGatewayAttachment"
 				Properties: {
 					RouteTableId: Ref: "PrivateSubnet\(Id)RouteTable"
 					DestinationCidrBlock: "0.0.0.0/0"
