@@ -16,12 +16,12 @@ import (
 		"1A": {
 			AZ:   "a"
 			Cidr: "10.0.0.0/20"
-			Role: "public"
+			Role: "apps"
 		}
 		"1B": {
 			AZ:   "b"
 			Cidr: "10.0.16.0/20"
-			Role: "public"
+			Role: "apps"
 		}
 	}
 
