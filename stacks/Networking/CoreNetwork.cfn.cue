@@ -8,6 +8,10 @@ import (
 )
 
 #CoreNetwork: CloudFormation.#Template & {
+	let default_vpc = {
+		Cidr: "10.0.0.0/16"
+	}
+
 	let default_public_subnets = {
 		"1A": {
 			AZ:   "a"
@@ -46,6 +50,7 @@ import (
 
 	#Env: {
 		Name:           string
+		Vpc: {...} | *default_vpc
 		PublicSubnets:  {...} | *default_public_subnets
 		PrivateSubnets: {...} | *default_private_subnets
 	}
@@ -59,7 +64,7 @@ import (
 
 		VPC: EC2.#VPC & {
 			Properties: {
-				CidrBlock:          "10.0.0.0/16"
+				CidrBlock:          #Env.Vpc.Cidr
 				InstanceTenancy:    "default"
 				EnableDnsSupport:   true
 				EnableDnsHostnames: true
