@@ -50,7 +50,7 @@ import (
 
 	#Env: {
 		Name:           string
-		Vpc: {...} | *default_vpc
+		Vpc:            {...} | *default_vpc
 		PublicSubnets:  {...} | *default_public_subnets
 		PrivateSubnets: {...} | *default_private_subnets
 	}
@@ -120,7 +120,7 @@ import (
 				DependsOn: "VPCGatewayAttachment"
 				Properties: {
 					AllocationId: "Fn::GetAtt": "NatGateway\(strings.ToUpper(Props.AZ))EIP.AllocationId"
-					SubnetId: Ref: "PublicSubnet\(Id)"
+					SubnetId: Ref:              "PublicSubnet\(Id)"
 					Tags: [{
 						Key: "Name"
 						Value: "Fn::Sub": nat_gateway_name
@@ -131,7 +131,7 @@ import (
 			"PublicSubnet\(Id)": EC2.#Subnet & {
 				Properties: {
 					VpcId: Ref: "VPC"
-					CidrBlock:        Props.Cidr
+					CidrBlock: Props.Cidr
 					AvailabilityZone: "Fn::Sub": "${AWS::Region}\(strings.ToLower(Props.AZ))"
 					MapPublicIpOnLaunch: true
 					Tags: [{
@@ -174,7 +174,7 @@ import (
 			"PrivateSubnet\(Id)": EC2.#Subnet & {
 				Properties: {
 					VpcId: Ref: "VPC"
-					CidrBlock:        Props.Cidr
+					CidrBlock: Props.Cidr
 					AvailabilityZone: "Fn::Sub": "${AWS::Region}\(strings.ToLower(Props.AZ))"
 					Tags: [{
 						Key: "Name"
