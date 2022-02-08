@@ -74,16 +74,6 @@ import (
 			}
 		}
 
-		VPCNetworkAcl: EC2.#NetworkAcl & {
-			Properties: {
-				VpcId: Ref: "VPC"
-				Tags: [{
-					Key: "Name"
-					Value: Ref: "AWS::StackName"
-				}]
-			}
-		}
-
 		InternetGateway: EC2.#InternetGateway & {
 			Properties: {
 				Tags: [{
