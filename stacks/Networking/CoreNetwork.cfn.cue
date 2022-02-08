@@ -4,7 +4,6 @@ import (
 	"strings"
 	"github.com/srehero/cfn/schemas/CloudFormation"
 	"github.com/srehero/cfn/schemas/EC2"
-	"github.com/srehero/cfn/schemas/IAM"
 )
 
 #CoreNetwork: CloudFormation.#Template & {
