@@ -79,7 +79,8 @@ import (
 			Properties: {
 				VpcId: Ref: "VPC"
 				Tags: [{
-					Name: Ref: "AWS::StackName"
+					Key: "Name"
+					Value: Ref: "AWS::StackName"
 				}]
 			}
 		}
