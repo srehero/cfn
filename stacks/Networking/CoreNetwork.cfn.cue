@@ -209,24 +209,5 @@ import (
 				}
 			}
 		}
-
-		S3GatewayVPCEndpoint: EC2.#VPCEndpoint & {
-			Properties: {
-				PolicyDocument: IAM.#PolicyDocument & {
-					Statement: [{
-						Effect: "Allow"
-						Action: "*"
-						Resource: "*"
-						Principal: "*"
-					}]
-				}
-				RouteTableIds: [ for Id, Props in #Env.PrivateSubnets { { Ref: "PrivateSubnet\(Id)RouteTable" } } ]
-				ServiceName: "Fn::Sub": "com.amazonaws.${AWS::Region}.s3"
-				VpcId: Ref: "VPC"
-				Tags: [{
-					Name: "Fn::Sub": "${AWS::StackName}-s3-endpoint"
-				}]
-			}
-		}
 	}
 }
