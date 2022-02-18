@@ -1,4 +1,4 @@
-package EC2
+package ElasticLoadBalancingV2
 
 import (
 	"github.com/srehero/cfn/schemas/CloudFormation"
