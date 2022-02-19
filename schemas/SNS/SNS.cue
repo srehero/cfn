@@ -11,3 +11,7 @@ import (
 #Topic: CloudFormation.#Resource & {
 	Type: "AWS::SNS::Topic"
 }
+
+#TopicPolicy: CloudFormation.#Resource & {
+	Type: "AWS::SNS::TopicPolicy"
+}
