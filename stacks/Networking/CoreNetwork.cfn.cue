@@ -199,4 +199,23 @@ import (
 			}
 		}
 	}
+
+	Outputs: {
+		VpcId: {
+			Value: Ref: "VPC"
+			Export: Name: "Fn::Sub": "${AWS::StackName}-VpcId"
+		}
+		VpcCidrBlock: {
+			Value: "Fn::GetAtt": "VPC.CidrBlock"
+			Export: Name: "Fn::Sub": "${AWS::StackName}-VpcCidrBlock"
+		}
+		VpcDefaultNetworkAcl: {
+			Value: "Fn::GetAtt": "VPC.DefaultNetworkAcl"
+			Export: Name: "Fn::Sub": "${AWS::StackName}-VpcDefaultNetworkAcl"
+		}
+		VpcDefaultSecurityGroup: {
+			Value: "Fn::GetAtt": "VPC.DefaultSecurityGroup"
+			Export: Name: "Fn::Sub": "${AWS::StackName}-VpcDefaultSecurityGroup"
+		}
+	}
 }
