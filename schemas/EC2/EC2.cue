@@ -59,3 +59,7 @@ import (
 #VPCGatewayAttachment: CloudFormation.#Resource & {
 	Type: "AWS::EC2::VPCGatewayAttachment"
 }
+
+#VPCPeeringConnection: CloudFormation.#Resource & {
+	Type: "AWS::EC2::VPCPeeringConnection"
+}
