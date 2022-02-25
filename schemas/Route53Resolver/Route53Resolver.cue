@@ -1,4 +1,4 @@
-package Route53
+package Route53Resolver
 
 import (
 	"github.com/srehero/cfn/schemas/CloudFormation"
