@@ -217,5 +217,25 @@ import (
 			Value: "Fn::GetAtt": "VPC.DefaultSecurityGroup"
 			Export: Name: "Fn::Sub": "${AWS::StackName}-VpcDefaultSecurityGroup"
 		}
+		for Id, Props in #Env.PublicSubnets {
+			"PublicSubnet\(Id)Id": {
+				Value: Ref: "PublicSubnet\(Id)"
+				Export: Name: "Fn::Sub": "${AWS::StackName}-PublicSubnet\(Id)Id"
+			}
+			"PublicSubnet\(Id)AvailabilityZone": {
+				Value: "Fn::GetAtt": "PublicSubnet\(Id).AvailabilityZone"
+				Export: Name: "Fn::Sub": "${AWS::StackName}-PublicSubnet\(Id)AvailabilityZone"
+			}
+		}
+		for Id, Props in #Env.PrivateSubnets {
+			"PrivateSubnet\(Id)Id": {
+				Value: Ref: "PrivateSubnet\(Id)"
+				Export: Name: "Fn::Sub": "${AWS::StackName}-PrivateSubnet\(Id)Id"
+			}
+			"PrivateSubnet\(Id)AvailabilityZone": {
+				Value: "Fn::GetAtt": "PrivateSubnet\(Id).AvailabilityZone"
+				Export: Name: "Fn::Sub": "${AWS::StackName}-PrivateSubnet\(Id)AvailabilityZone"
+			}
+		}
 	}
 }
