@@ -1,20 +1,25 @@
 package CloudFormation
 
 #Resource: {
-	Type:       string
-	DependsOn?: string
+	CreationPolicy: {...}
+	DeletionPolicy: string
+	DependsOn?:     string | [...string]
+	Metadata: {...}
 	Properties: {...}
+	Type: string
+	UpdatePolicy: {...}
+	UpdateReplacePolicy: string
 }
 
 #Template: {
 	AWSTemplateFormatVersion: "2010-09-09"
-	Description?:             string
-	Metadata?: {...}
-	Parameters?: {...}
-	Rules?: {...}
-	Mappings?: {...}
 	Conditions?: {...}
-	Transform?: string
-	Resources: {...}
+	Description?: string
+	Mappings?: {...}
+	Metadata?: {...}
 	Outputs?: {...}
+	Parameters?: {...}
+	Resources: {...}
+	Rules?: {...}
+	Transform?: string
 }
