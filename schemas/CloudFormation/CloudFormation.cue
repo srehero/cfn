@@ -1,14 +1,14 @@
 package CloudFormation
 
 #Resource: {
-	CreationPolicy: {...}
-	DeletionPolicy: string
+	CreationPolicy?: {...}
+	DeletionPolicy?: string
 	DependsOn?:     string | [...string]
-	Metadata: {...}
+	Metadata?: {...}
 	Properties: {...}
 	Type: string
-	UpdatePolicy: {...}
-	UpdateReplacePolicy: string
+	UpdatePolicy?: {...}
+	UpdateReplacePolicy?: string
 }
 
 #Template: {
