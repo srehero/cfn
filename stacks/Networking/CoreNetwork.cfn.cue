@@ -226,6 +226,10 @@ import (
 				Value: "Fn::GetAtt": "PublicSubnet\(Id).AvailabilityZone"
 				Export: Name: "Fn::Sub": "${AWS::StackName}-PublicSubnet\(Id)AvailabilityZone"
 			}
+			"PublicSubnet\(Id)RouteTableId": {
+				Value: Ref: "PublicSubnet\(Id)RouteTable"
+				Export: Name: "Fn::Sub": "${AWS::StackName}-PublicSubnet\(Id)RouteTableId"
+			}
 		}
 		for Id, Props in #Env.PrivateSubnets {
 			"PrivateSubnet\(Id)Id": {
@@ -235,6 +239,10 @@ import (
 			"PrivateSubnet\(Id)AvailabilityZone": {
 				Value: "Fn::GetAtt": "PrivateSubnet\(Id).AvailabilityZone"
 				Export: Name: "Fn::Sub": "${AWS::StackName}-PrivateSubnet\(Id)AvailabilityZone"
+			}
+			"PrivateSubnet\(Id)RouteTableId": {
+				Value: Ref: "PrivateSubnet\(Id)RouteTable"
+				Export: Name: "Fn::Sub": "${AWS::StackName}-PrivateSubnet\(Id)RouteTableId"
 			}
 		}
 	}
