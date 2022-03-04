@@ -5,11 +5,11 @@ import (
 )
 
 #AccessKey: CloudFormation.#Resource & {
-	Type: "AWS::ECS::AccessKey"
+	Type: "AWS::IAM::AccessKey"
 }
 
 #Group: CloudFormation.#Resource & {
-	Type: "AWS::ECS::Group"
+	Type: "AWS::IAM::Group"
 }
 
 #InstanceProfile: CloudFormation.#Resource & {
@@ -21,11 +21,11 @@ import (
 }
 
 #OIDCProvider: CloudFormation.#Resource & {
-	Type: "AWS::ECS::OIDCProvider"
+	Type: "AWS::IAM::OIDCProvider"
 }
 
 #Policy: CloudFormation.#Resource & {
-	Type: "AWS::ECS::Policy"
+	Type: "AWS::IAM::Policy"
 }
 
 #PolicyDocument: {
@@ -34,29 +34,29 @@ import (
 }
 
 #Role: CloudFormation.#Resource & {
-	Type: "AWS::ECS::Role"
+	Type: "AWS::IAM::Role"
 }
 
 #SAMLProvider: CloudFormation.#Resource & {
-	Type: "AWS::ECS::SAMLProvider"
+	Type: "AWS::IAM::SAMLProvider"
 }
 
 #ServerCertificate: CloudFormation.#Resource & {
-	Type: "AWS::ECS::ServerCertificate"
+	Type: "AWS::IAM::ServerCertificate"
 }
 
 #ServiceLinkedRole: CloudFormation.#Resource & {
-	Type: "AWS::ECS::ServiceLinkedRole"
+	Type: "AWS::IAM::ServiceLinkedRole"
 }
 
 #User: CloudFormation.#Resource & {
-	Type: "AWS::ECS::User"
+	Type: "AWS::IAM::User"
 }
 
 #UserToGroupAddition: CloudFormation.#Resource & {
-	Type: "AWS::ECS::UserToGroupAddition"
+	Type: "AWS::IAM::UserToGroupAddition"
 }
 
 #VirtualMFADevice: CloudFormation.#Resource & {
-	Type: "AWS::ECS::VirtualMFADevice"
+	Type: "AWS::IAM::VirtualMFADevice"
 }
