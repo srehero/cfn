@@ -28,7 +28,6 @@ import (
 		}
 		Topic: {
 			ArnExport: string
-			Name: string
 		}
 	}
 
