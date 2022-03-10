@@ -1,6 +1,6 @@
 package S3
 
-#SecureBucket: {
+SecureBucket: {
 	AccessControl: "Private"
 	BucketEncryption: {
 		ServerSideEncryptionConfiguration: [{
