@@ -8,12 +8,8 @@ import (
 )
 
 #SimplePipeline: Serverless.#Template & {
-	let pipeline_name_sans_env = "\(#Env.Namespace)_\(#Env.Pipeline.Name)"
-	let pipeline_name = "\(pipeline_name_sans_env)_\(#Env.Name)"
-
 	#Env: {
 		Name: string
-		Namespace: string
 		Function: {
 			CodeUri: string | *"lambda_function/"
 			Handler: string | *"handler.handler"
@@ -65,7 +61,7 @@ import (
 					"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 				]
 				Policies: [{
-					PolicyName: "process_\(pipeline_name)_queue"
+					PolicyName: "process-\(#Env.Pipeline.Name)-queue"
 					PolicyDocument: IAM.#PolicyDocument & {
 						Statement: [{
 							Effect: "Allow"
@@ -84,7 +80,7 @@ import (
 		Queue: SQS.#Queue & {
 			Properties: {
 				MessageRetentionPeriod: #Env.Queue.MessageRetentionPeriod
-				QueueName: pipeline_name
+				QueueName: #Env.Pipeline.Name
 				// Visibility timeout should always be at least 6 times the function's timeout
 				// https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html
 				VisibilityTimeout: #Env.Function.Timeout * 6
@@ -115,14 +111,14 @@ import (
 		ProcessingFailedQueue: SQS.#Queue & {
 			Properties: {
 				MessageRetentionPeriod: 1209600 // 14 days
-				QueueName: "\(pipeline_name_sans_env)_processing_failed_\(#Env.Name)"
+				QueueName: "\(#Env.Pipeline.Name)-processing-failed"
 			}
 		}
 
 		DeliveryFailedQueue: SQS.#Queue & {
 			Properties: {
 				MessageRetentionPeriod: 1209600 // 14 days
-				QueueName: "\(pipeline_name_sans_env)_delivery_failed_\(#Env.Name)"
+				QueueName: "\(#Env.Pipeline.Name)-delivery-failed"
 			}
 		}
 
@@ -152,8 +148,8 @@ import (
 
 		ManagePipelineManagedPolicy: IAM.#ManagedPolicy & {
 			Properties: {
-				Description:       "Manage resources in the \(pipeline_name) pipeline"
-				ManagedPolicyName: "manage-\(pipeline_name)_pipeline"
+				Description:       "Manage resources in the \(#Env.Pipeline.Name) pipeline"
+				ManagedPolicyName: "manage-\(#Env.Pipeline.Name)-pipeline"
 				PolicyDocument:    IAM.#PolicyDocument & {
 					Statement: [{
 						Effect: "Allow"
