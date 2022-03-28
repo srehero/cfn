@@ -41,7 +41,7 @@ import (
 						Properties: {
 							Queue: "Fn::GetAtt": "Queue.Arn"
 							BatchSize: 10
-							Enabled: true
+							Enabled:   true
 						}
 					}
 				}
@@ -58,10 +58,10 @@ import (
 					}]
 				}
 				ManagedPolicyArns: [
-					"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+					"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
 				]
 				Policies: [{
-					PolicyName: "process-\(#Env.Pipeline.Name)-queue"
+					PolicyName:     "process-\(#Env.Pipeline.Name)-queue"
 					PolicyDocument: IAM.#PolicyDocument & {
 						Statement: [{
 							Effect: "Allow"
@@ -80,7 +80,7 @@ import (
 		Queue: SQS.#Queue & {
 			Properties: {
 				MessageRetentionPeriod: #Env.Queue.MessageRetentionPeriod
-				QueueName: #Env.Pipeline.Name
+				QueueName:              #Env.Pipeline.Name
 				// Visibility timeout should always be at least 6 times the function's timeout
 				// https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html
 				VisibilityTimeout: #Env.Function.Timeout * 6
@@ -111,14 +111,14 @@ import (
 		ProcessingFailedQueue: SQS.#Queue & {
 			Properties: {
 				MessageRetentionPeriod: 1209600 // 14 days
-				QueueName: "\(#Env.Pipeline.Name)-processing-failed"
+				QueueName:              "\(#Env.Pipeline.Name)-processing-failed"
 			}
 		}
 
 		DeliveryFailedQueue: SQS.#Queue & {
 			Properties: {
 				MessageRetentionPeriod: 1209600 // 14 days
-				QueueName: "\(#Env.Pipeline.Name)-delivery-failed"
+				QueueName:              "\(#Env.Pipeline.Name)-delivery-failed"
 			}
 		}
 
