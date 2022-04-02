@@ -13,6 +13,7 @@ import (
 		Function: {
 			CodeUri: string | *"lambda_function/"
 			Handler: string | *"handler.handler"
+			Policies: [{...}] | *[]
 			Runtime: string | *"python3.9"
 			Timeout: int | *900
 		}
@@ -73,7 +74,7 @@ import (
 							Resource: "Fn::GetAtt": "Queue.Arn"
 						}]
 					}
-				}]
+				}] + #Env.Function.Policies
 			}
 		}
 
