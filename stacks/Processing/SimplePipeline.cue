@@ -8,8 +8,7 @@ import (
 )
 
 #SimplePipeline: Serverless.#Template & {
-	#Env: {
-		Name: string
+	#Stack: {
 		Function: {
 			CodeUri: string | *"lambda_function/"
 			Handler: string | *"handler.handler"
@@ -31,11 +30,11 @@ import (
 	Resources: {
 		Function: Serverless.#Function & {
 			Properties: {
-				CodeUri: #Env.Function.CodeUri
-				Handler: #Env.Function.Handler
+				CodeUri: #Stack.Function.CodeUri
+				Handler: #Stack.Function.Handler
 				Role: "Fn::GetAtt": "FunctionRole.Arn"
-				Runtime: #Env.Function.Runtime
-				Timeout: #Env.Function.Timeout
+				Runtime: #Stack.Function.Runtime
+				Timeout: #Stack.Function.Timeout
 				Events: {
 					SQSEvent: {
 						Type: "SQS"
@@ -62,7 +61,7 @@ import (
 					"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
 				]
 				Policies: [{
-					PolicyName:     "process-\(#Env.Pipeline.Name)-queue"
+					PolicyName:     "process-\(#Stack.Pipeline.Name)-queue"
 					PolicyDocument: IAM.#PolicyDocument & {
 						Statement: [{
 							Effect: "Allow"
@@ -74,17 +73,17 @@ import (
 							Resource: "Fn::GetAtt": "Queue.Arn"
 						}]
 					}
-				}] + #Env.Function.Policies
+				}] + #Stack.Function.Policies
 			}
 		}
 
 		Queue: SQS.#Queue & {
 			Properties: {
-				MessageRetentionPeriod: #Env.Queue.MessageRetentionPeriod
-				QueueName:              #Env.Pipeline.Name
+				MessageRetentionPeriod: #Stack.Queue.MessageRetentionPeriod
+				QueueName:              #Stack.Pipeline.Name
 				// Visibility timeout should always be at least 6 times the function's timeout
 				// https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html
-				VisibilityTimeout: #Env.Function.Timeout * 6
+				VisibilityTimeout: #Stack.Function.Timeout * 6
 				RedrivePolicy: {
 					deadLetterTargetArn: "Fn::GetAtt": "ProcessingFailedQueue.Arn"
 					// Retry at least five times to create headroom for throttling and scaling activites
@@ -102,7 +101,7 @@ import (
 						Principal: Service: "sns.amazonaws.com"
 						Action: "sqs:SendMessage"
 						Resource: "Fn::GetAtt": "Queue.Arn"
-						Condition: ArnEquals: "aws:SourceArn": "Fn::ImportValue": #Env.Topic.ArnExport
+						Condition: ArnEquals: "aws:SourceArn": "Fn::ImportValue": #Stack.Topic.ArnExport
 					}]
 				}
 				Queues: [{Ref: "Queue"}]
@@ -112,14 +111,14 @@ import (
 		ProcessingFailedQueue: SQS.#Queue & {
 			Properties: {
 				MessageRetentionPeriod: 1209600 // 14 days
-				QueueName:              "\(#Env.Pipeline.Name)-processing-failed"
+				QueueName:              "\(#Stack.Pipeline.Name)-processing-failed"
 			}
 		}
 
 		DeliveryFailedQueue: SQS.#Queue & {
 			Properties: {
 				MessageRetentionPeriod: 1209600 // 14 days
-				QueueName:              "\(#Env.Pipeline.Name)-delivery-failed"
+				QueueName:              "\(#Stack.Pipeline.Name)-delivery-failed"
 			}
 		}
 
@@ -131,7 +130,7 @@ import (
 						Principal: Service: "sns.amazonaws.com"
 						Action: "sqs:SendMessage"
 						Resource: [{"Fn::GetAtt": "DeliveryFailedQueue.Arn"}]
-						Condition: ArnEquals: "aws:SourceArn": "Fn::ImportValue": #Env.Topic.ArnExport
+						Condition: ArnEquals: "aws:SourceArn": "Fn::ImportValue": #Stack.Topic.ArnExport
 					}]
 				}
 				Queues: [{Ref: "DeliveryFailedQueue"}]
@@ -143,14 +142,14 @@ import (
 				Endpoint: "Fn::GetAtt": "Queue.Arn"
 				Protocol: "sqs"
 				RedrivePolicy: deadLetterTargetArn: "Fn::GetAtt": "DeliveryFailedQueue.Arn"
-				TopicArn: "Fn::ImportValue": #Env.Topic.ArnExport
+				TopicArn: "Fn::ImportValue": #Stack.Topic.ArnExport
 			}
 		}
 
 		ManagePipelineManagedPolicy: IAM.#ManagedPolicy & {
 			Properties: {
-				Description:       "Manage resources in the \(#Env.Pipeline.Name) pipeline"
-				ManagedPolicyName: "manage-\(#Env.Pipeline.Name)-pipeline"
+				Description:       "Manage resources in the \(#Stack.Pipeline.Name) pipeline"
+				ManagedPolicyName: "manage-\(#Stack.Pipeline.Name)-pipeline"
 				PolicyDocument:    IAM.#PolicyDocument & {
 					Statement: [{
 						Effect: "Allow"
