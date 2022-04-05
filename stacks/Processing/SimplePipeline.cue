@@ -12,7 +12,7 @@ import (
 		Function: {
 			CodeUri: string | *"lambda_function/"
 			Handler: string | *"handler.handler"
-			Policies: [{...}] | *[]
+			Policies: [...{...}] | *[]
 			Runtime: string | *"python3.9"
 			Timeout: int | *900
 		}
