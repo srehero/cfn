@@ -63,3 +63,7 @@ import (
 #VPCPeeringConnection: CloudFormation.#Resource & {
 	Type: "AWS::EC2::VPCPeeringConnection"
 }
+
+#VPCFlowLogs: CloudFormation.#Resource & {
+	Type: "AWS::EC2::FlowLog"
+}
