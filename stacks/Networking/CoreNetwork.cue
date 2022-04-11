@@ -74,6 +74,20 @@ import (
 			}
 		}
 
+		FlowLog: EC2.#VPCFlowLogs & {
+			Properties: {
+				LogDestination: "arn:aws:s3:::vpc-flow-logs-security-bucket",
+				LogDestinationType: "s3",
+				ResourceId: Ref: "VPC",
+				ResourceType: "VPC",
+				Tags: [{
+					Key: "Name"
+					Value: Ref: "AWS::StackName"
+				}],
+				TrafficType: "REJECT"
+			}
+		}
+
 		InternetGateway: EC2.#InternetGateway & {
 			Properties: {
 				Tags: [{
