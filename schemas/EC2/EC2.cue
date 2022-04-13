@@ -8,6 +8,10 @@ import (
 	Type: "AWS::EC2::EIP"
 }
 
+#FlowLog: CloudFormation.#Resource & {
+	Type: "AWS::EC2::FlowLog"
+}
+
 #Instance: CloudFormation.#Resource & {
 	Type: "AWS::EC2::Instance"
 }
@@ -62,8 +66,4 @@ import (
 
 #VPCPeeringConnection: CloudFormation.#Resource & {
 	Type: "AWS::EC2::VPCPeeringConnection"
-}
-
-#VPCFlowLogs: CloudFormation.#Resource & {
-	Type: "AWS::EC2::FlowLog"
 }
