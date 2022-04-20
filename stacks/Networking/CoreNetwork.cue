@@ -55,12 +55,6 @@ import (
 	}
 
 	Resources: {
-		// DHCPOptions?
-		// VPCDHCPOptionsAssociation?
-		// VPCFlowLogsRole
-		// VPCFlowLogsLogGroup
-		// VPCFlowLogsToCloudWatch
-
 		VPC: EC2.#VPC & {
 			Properties: {
 				CidrBlock:          #Env.Vpc.Cidr
@@ -71,20 +65,6 @@ import (
 					Key: "Name"
 					Value: Ref: "AWS::StackName"
 				}]
-			}
-		}
-
-		FlowLog: EC2.#VPCFlowLogs & {
-			Properties: {
-				LogDestination: "arn:aws:s3:::vpc-flow-logs-security-bucket",
-				LogDestinationType: "s3",
-				ResourceId: Ref: "VPC",
-				ResourceType: "VPC",
-				Tags: [{
-					Key: "Name"
-					Value: Ref: "AWS::StackName"
-				}],
-				TrafficType: "REJECT"
 			}
 		}
 
