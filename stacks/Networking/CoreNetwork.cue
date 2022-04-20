@@ -47,8 +47,7 @@ import (
 		}
 	}
 
-	#Env: {
-		Name:           string
+	#Stack: {
 		Vpc:            {...} | *default_vpc
 		PublicSubnets:  {...} | *default_public_subnets
 		PrivateSubnets: {...} | *default_private_subnets
@@ -57,7 +56,7 @@ import (
 	Resources: {
 		VPC: EC2.#VPC & {
 			Properties: {
-				CidrBlock:          #Env.Vpc.Cidr
+				CidrBlock:          #Stack.Vpc.Cidr
 				InstanceTenancy:    "default"
 				EnableDnsSupport:   true
 				EnableDnsHostnames: true
@@ -84,7 +83,7 @@ import (
 			}
 		}
 
-		for Id, Props in #Env.PublicSubnets {
+		for Id, Props in #Stack.PublicSubnets {
 			let subnet_name = "${AWS::StackName}-\(Props.Role)-public-subnet-\(strings.ToLower(Id))"
 			let nat_gateway_name = "${AWS::StackName}-nat-gateway-\(strings.ToLower(Props.AZ))"
 
@@ -151,7 +150,7 @@ import (
 			}
 		}
 
-		for Id, Props in #Env.PrivateSubnets {
+		for Id, Props in #Stack.PrivateSubnets {
 			let subnet_name = "${AWS::StackName}-\(Props.Role)-private-subnet-\(strings.ToLower(Id))"
 
 			"PrivateSubnet\(Id)": EC2.#Subnet & {
@@ -211,7 +210,7 @@ import (
 			Value: "Fn::GetAtt": "VPC.DefaultSecurityGroup"
 			Export: Name: "Fn::Sub": "${AWS::StackName}-VpcDefaultSecurityGroup"
 		}
-		for Id, Props in #Env.PublicSubnets {
+		for Id, Props in #Stack.PublicSubnets {
 			"PublicSubnet\(Id)Id": {
 				Value: Ref: "PublicSubnet\(Id)"
 				Export: Name: "Fn::Sub": "${AWS::StackName}-PublicSubnet\(Id)Id"
@@ -225,7 +224,7 @@ import (
 				Export: Name: "Fn::Sub": "${AWS::StackName}-PublicSubnet\(Id)RouteTableId"
 			}
 		}
-		for Id, Props in #Env.PrivateSubnets {
+		for Id, Props in #Stack.PrivateSubnets {
 			"PrivateSubnet\(Id)Id": {
 				Value: Ref: "PrivateSubnet\(Id)"
 				Export: Name: "Fn::Sub": "${AWS::StackName}-PrivateSubnet\(Id)Id"

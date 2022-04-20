@@ -4,9 +4,8 @@ import (
 	"github.com/srehero/cfn/stacks/Networking"
 )
 
-stack: "testing": Networking.#CoreNetwork & {
-	#Env: {
-		Name: "testing"
+stack: "test-network": Networking.#CoreNetwork & {
+	#Stack: {
 		Vpc: {
 			Cidr: "10.10.0.0/16"
 		}
