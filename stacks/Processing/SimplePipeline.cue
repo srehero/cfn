@@ -11,6 +11,7 @@ import (
 	#Stack: {
 		Function: {
 			CodeUri: string | *"lambda_function/"
+			EnableLambdaInsights: bool | *false
 			Handler: string | *"handler.handler"
 			Policies: [...{...}] | *[]
 			Runtime: string | *"python3.9"
@@ -31,6 +32,9 @@ import (
 		Function: Serverless.#Function & {
 			Properties: {
 				CodeUri: #Stack.Function.CodeUri
+				if #Stack.Function.EnableLambdaInsights {
+					Layers: [{"Fn::Sub": "arn:aws:lambda:${AWS::Region}:580247275435:layer:LambdaInsightsExtension:18"}]
+				}
 				Handler: #Stack.Function.Handler
 				Role: "Fn::GetAtt": "FunctionRole.Arn"
 				Runtime: #Stack.Function.Runtime
@@ -59,7 +63,7 @@ import (
 				}
 				ManagedPolicyArns: [
 					"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-				]
+				] + [if #Stack.Function.EnableLambdaInsights { "arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy" }]
 				Policies: [{
 					PolicyName:     "process-\(#Stack.Pipeline.Name)-queue"
 					PolicyDocument: IAM.#PolicyDocument & {
