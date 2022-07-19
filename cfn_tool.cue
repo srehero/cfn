@@ -18,6 +18,11 @@ command: "cfn.deploy": {
 		stdout: string
 	}
 
+	get_aws_region: exec.Run & {
+		cmd: ["bash", "-c", "aws configure get region | tr -d '\n'"]
+		stdout: string
+	}
+
 	continue_with_aws_credentials: exec.Run & {
 		continue: string
 		if get_aws_account.stdout != "" {
@@ -27,12 +32,12 @@ command: "cfn.deploy": {
 			continue: "false"
 		}
 		cmd: [continue]
-		$after: get_aws_account
+		$after: [get_aws_account, get_aws_region]
 	}
 
 	continue_with_bucket: exec.Run & {
 		command: [...string]
-		bucket: config.template_bucket[get_aws_account.stdout]
+		bucket: config.template_bucket[get_aws_account.stdout][get_aws_region.stdout]
 		if bucket != _|_ {
 			command: ["bash", "-c", "aws s3api head-bucket --bucket \(bucket)"]
 		}
@@ -41,7 +46,7 @@ command: "cfn.deploy": {
 		}
 		cmd: command
 		stdout: string
-		$after: get_aws_account
+		$after: [get_aws_account, get_aws_region]
 	}
 
 	ask_for_stack_name: cli.Ask & {
@@ -93,10 +98,10 @@ command: "cfn.deploy": {
 
 	deploy_stack: exec.Run & {
 		bucket: string
-		if config.template_bucket[get_aws_account.stdout] != _|_ {
-			bucket: "--s3-bucket \(config.template_bucket[get_aws_account.stdout])"
+		if config.template_bucket[get_aws_account.stdout][get_aws_region.stdout] != _|_ {
+			bucket: "--s3-bucket \(config.template_bucket[get_aws_account.stdout][get_aws_region.stdout])"
 		}
-		if config.template_bucket[get_aws_account.stdout] == _|_ {
+		if config.template_bucket[get_aws_account.stdout][get_aws_region.stdout] == _|_ {
 			bucket: ""
 		}
 
