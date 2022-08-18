@@ -19,7 +19,7 @@ command: "cfn.deploy": {
 	}
 
 	get_aws_region: exec.Run & {
-		cmd: ["bash", "-c", "aws configure get region | tr -d '\n'"]
+		cmd: ["bash", "-c", "aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]' | tr -d '\n'"]
 		stdout: string
 	}
 
