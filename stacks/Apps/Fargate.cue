@@ -250,4 +250,11 @@ let Fnable = string | Fn
 			}
 		}
 	}
+
+	Outputs: {
+		ServiceSecurityGroupId: {
+			Export: Name: "Fn::Sub": "${AWS::StackName}-ServiceSecurityGroupId"
+			Value: "Fn::GetAtt": "ServiceSecurityGroup.GroupId"
+		}
+	}
 }
