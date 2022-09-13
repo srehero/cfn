@@ -203,6 +203,7 @@ let Fnable = string | Fn
 					}]
 				}]
 				ExecutionRoleArn: "Fn::GetAtt": "ExecutionRole.Arn"
+				Family:      #Stack.App.Name
 				Memory:      #Stack.TaskDefinition.Memory
 				NetworkMode: "awsvpc"
 				RequiresCompatibilities: ["FARGATE"]
