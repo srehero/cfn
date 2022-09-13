@@ -255,9 +255,19 @@ let Fnable = string | Fn
 	}
 
 	Outputs: {
+		ExecutionRoleArn: {
+			Export: Name: "Fn::Sub": "${AWS::StackName}-ExecutionRoleArn"
+			Value: "Fn::GetAtt": "ExecutionRole.Arn"
+		}
+
 		ServiceSecurityGroupId: {
 			Export: Name: "Fn::Sub": "${AWS::StackName}-ServiceSecurityGroupId"
 			Value: "Fn::GetAtt": "ServiceSecurityGroup.GroupId"
+		}
+
+		TaskRoleArn: {
+			Export: Name: "Fn::Sub": "${AWS::StackName}-TaskRoleArn"
+			Value: "Fn::GetAtt": "TaskRole.Arn"
 		}
 	}
 }
