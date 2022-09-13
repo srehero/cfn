@@ -41,6 +41,7 @@ let Fnable = string | Fn
 
 		Service: {
 			ReplicaCount: int
+			ServiceName:  string | *App.Name
 			Subnets:      Fnable | [...Fnable]
 			VpcId:        Fnable
 		}
@@ -51,6 +52,7 @@ let Fnable = string | Fn
 			ExecutionRole: {
 				ManagedPolicyArns: [...Fnable] | *[]
 			}
+			Family: string | *App.Name
 			HealthCheck: {
 				Command: string | [...string]
 			}
@@ -152,7 +154,7 @@ let Fnable = string | Fn
 					SecurityGroups: [{Ref: "ServiceSecurityGroup"}]
 					Subnets: #Stack.Service.Subnets
 				}
-				ServiceName: #Stack.App.Name
+				ServiceName: #Stack.Service.ServiceName
 				TaskDefinition: Ref: "TaskDefinition"
 			}
 		}
@@ -203,7 +205,7 @@ let Fnable = string | Fn
 					}]
 				}]
 				ExecutionRoleArn: "Fn::GetAtt": "ExecutionRole.Arn"
-				Family:      #Stack.App.Name
+				Family:      #Stack.TaskDefinition.Family
 				Memory:      #Stack.TaskDefinition.Memory
 				NetworkMode: "awsvpc"
 				RequiresCompatibilities: ["FARGATE"]
