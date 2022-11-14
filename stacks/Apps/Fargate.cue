@@ -62,6 +62,12 @@ let Fnable = string | Fn
 				ManagedPolicyArns: [...Fnable] | *[]
 			}
 		}
+
+		TargetGroup: {
+			HealthCheck: {
+				Path: string | *"/health"
+			}
+		}
 	}
 
 	Resources: {
@@ -119,7 +125,7 @@ let Fnable = string | Fn
 		TargetGroup: ELB.#TargetGroup & {
 			Properties: {
 				HealthCheckIntervalSeconds: 10
-				HealthCheckPath:            "/health"
+				HealthCheckPath:            #Stack.TargetGroup.HealthCheck.Path
 				HealthCheckProtocol:        "HTTP"
 				HealthCheckTimeoutSeconds:  5
 				HealthyThresholdCount:      3
