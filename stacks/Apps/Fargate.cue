@@ -47,6 +47,7 @@ let Fnable = string | Fn
 		}
 
 		TaskDefinition: {
+			Command:              [...string] | *{Ref: "AWS::NoValue"}
 			Cpu:                  string
 			EnvironmentFileS3Arn: Fnable
 			ExecutionRole: {
@@ -186,6 +187,7 @@ let Fnable = string | Fn
 			Properties: {
 				Cpu: #Stack.TaskDefinition.Cpu
 				ContainerDefinitions: [{
+					Command: #Stack.TaskDefinition.Command
 					EnvironmentFiles: [{
 						Type:  "s3"
 						Value: #Stack.TaskDefinition.EnvironmentFileS3Arn
