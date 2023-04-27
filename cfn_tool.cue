@@ -93,7 +93,6 @@ command: "cfn.deploy": {
 			continue: "false"
 		}
 		cmd: [continue]
-		$after: ask_to_deploy
 	}
 
 	deploy_stack: exec.Run & {
