@@ -61,6 +61,12 @@ command: "cfn.deploy": {
 		$after: ask_for_stack_name
 	}
 
+	export_tags: exec.Run & {
+		cmd: ["bash", "-c", "cue export ./... -e 'stack[\"\(ask_for_stack_name.response)\"].Metadata.Tags' 2> /dev/null | jq -r 'to_entries | map([\"\\(.key)=\\(.value)\"]) | flatten | join(\" \")' | tr -d '\n'"]
+		stdout: string
+		$after: ask_for_stack_name
+	}
+
 	write_template: file.Append & {
 		filename: create_tmp_file.stdout
 		contents: export_template.stdout
@@ -104,7 +110,15 @@ command: "cfn.deploy": {
 			bucket: ""
 		}
 
-		cmd: ["bash", "-c", "aws cloudformation deploy --stack-name \(ask_for_stack_name.response) --template-file \(create_tmp_file.stdout) \(bucket) --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM || true"]
+		tags: string
+		if export_tags.stdout != "" && export_tags.stdout != _|_ {
+			tags: "--tags \(export_tags.stdout)"
+		}
+		if export_tags.stdout == "" || export_tags.stdout == _|_ {
+			tags: ""
+		}
+
+		cmd: ["bash", "-c", "aws cloudformation deploy --stack-name \(ask_for_stack_name.response) --template-file \(create_tmp_file.stdout) \(bucket) \(tags) --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM || true"]
 		$after: continue_with_deploy
 	}
 }
