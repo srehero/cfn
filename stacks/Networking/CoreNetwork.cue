@@ -84,7 +84,7 @@ import (
 		}
 
 		for Id, Props in #Stack.PublicSubnets {
-			let subnet_name = "${AWS::StackName}-\(Props.Role)-public-subnet-\(strings.ToLower(Id))"
+			let subnet_name = "${AWS::StackName}-public-\(Props.Role)-subnet-\(strings.ToLower(Id))"
 			let nat_gateway_name = "${AWS::StackName}-nat-gateway-\(strings.ToLower(Props.AZ))"
 
 			"NatGateway\(strings.ToUpper(Props.AZ))EIP": EC2.#EIP & {
@@ -151,7 +151,7 @@ import (
 		}
 
 		for Id, Props in #Stack.PrivateSubnets {
-			let subnet_name = "${AWS::StackName}-\(Props.Role)-private-subnet-\(strings.ToLower(Id))"
+			let subnet_name = "${AWS::StackName}-private-\(Props.Role)-subnet-\(strings.ToLower(Id))"
 
 			"PrivateSubnet\(Id)": EC2.#Subnet & {
 				Properties: {
