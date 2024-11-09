@@ -20,6 +20,10 @@ import (
 	Type: "AWS::EC2::InternetGateway"
 }
 
+#KeyPair: CloudFormation.#Resource & {
+	Type: "AWS::EC2::KeyPair"
+}
+
 #NatGateway: CloudFormation.#Resource & {
 	Type: "AWS::EC2::NatGateway"
 }
