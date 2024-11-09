@@ -24,6 +24,10 @@ import (
 	Type: "AWS::EC2::KeyPair"
 }
 
+#LaunchTemplate: CloudFormation.#Resource & {
+	Type: "AWS::EC2::LaunchTemplate"
+}
+
 #NatGateway: CloudFormation.#Resource & {
 	Type: "AWS::EC2::NatGateway"
 }
