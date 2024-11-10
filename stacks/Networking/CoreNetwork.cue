@@ -8,49 +8,53 @@ import (
 
 #CoreNetwork: CloudFormation.#Template & {
 	let default_vpc = {
-		Cidr: "10.0.0.0/16"
+		Cidr: "10.128.0.0/16"
 	}
 
 	let default_public_subnets = {
 		"1A": {
 			AZ:   "a"
-			Cidr: "10.0.0.0/20"
-			Role: "apps"
+			Cidr: "10.128.0.0/20"
+			Role: "interfaces"
 		}
 		"1B": {
 			AZ:   "b"
-			Cidr: "10.0.16.0/20"
-			Role: "apps"
+			Cidr: "10.128.16.0/20"
+			Role: "interfaces"
 		}
 	}
 
 	let default_private_subnets = {
 		"1A": {
 			AZ:   "a"
-			Cidr: "10.0.32.0/20"
+			Cidr: "10.128.32.0/20"
 			Role: "apps"
 		}
 		"1B": {
 			AZ:   "b"
-			Cidr: "10.0.48.0/20"
+			Cidr: "10.128.48.0/20"
 			Role: "apps"
 		}
-		"2A": {
+	}
+
+	let default_isolated_subnets = {
+		"1A": {
 			AZ:   "a"
-			Cidr: "10.0.64.0/20"
+			Cidr: "10.128.64.0/20"
 			Role: "data"
 		}
-		"2B": {
+		"1B": {
 			AZ:   "b"
-			Cidr: "10.0.80.0/20"
+			Cidr: "10.128.80.0/20"
 			Role: "data"
 		}
 	}
 
 	#Stack: {
-		Vpc:            {...} | *default_vpc
-		PublicSubnets:  {...} | *default_public_subnets
+		Vpc: {...} | *default_vpc
+		PublicSubnets: {...} | *default_public_subnets
 		PrivateSubnets: {...} | *default_private_subnets
+		IsolatedSubnets: {...} | *default_isolated_subnets
 	}
 
 	Resources: {
@@ -191,6 +195,39 @@ import (
 				}
 			}
 		}
+
+		for Id, Props in #Stack.IsolatedSubnets {
+			let subnet_name = "${AWS::StackName}-isolated-\(Props.Role)-subnet-\(strings.ToLower(Id))"
+
+			"IsolatedSubnet\(Id)": EC2.#Subnet & {
+				Properties: {
+					VpcId: Ref: "VPC"
+					CidrBlock: Props.Cidr
+					AvailabilityZone: "Fn::Sub": "${AWS::Region}\(strings.ToLower(Props.AZ))"
+					Tags: [{
+						Key: "Name"
+						Value: "Fn::Sub": subnet_name
+					}]
+				}
+			}
+
+			"IsolatedSubnet\(Id)RouteTable": EC2.#RouteTable & {
+				Properties: {
+					VpcId: Ref: "VPC"
+					Tags: [{
+						Key: "Name"
+						Value: "Fn::Sub": subnet_name
+					}]
+				}
+			}
+
+			"IsolatedSubnet\(Id)RouteTableAssociation": EC2.#SubnetRouteTableAssociation & {
+				Properties: {
+					SubnetId: Ref:     "IsolatedSubnet\(Id)"
+					RouteTableId: Ref: "IsolatedSubnet\(Id)RouteTable"
+				}
+			}
+		}
 	}
 
 	Outputs: {
@@ -236,6 +273,20 @@ import (
 			"PrivateSubnet\(Id)RouteTableId": {
 				Value: Ref: "PrivateSubnet\(Id)RouteTable"
 				Export: Name: "Fn::Sub": "${AWS::StackName}-PrivateSubnet\(Id)RouteTableId"
+			}
+		}
+		for Id, Props in #Stack.IsolatedSubnets {
+			"IsolatedSubnet\(Id)Id": {
+				Value: Ref: "IsolatedSubnet\(Id)"
+				Export: Name: "Fn::Sub": "${AWS::StackName}-IsolatedSubnet\(Id)Id"
+			}
+			"IsolatedSubnet\(Id)AvailabilityZone": {
+				Value: "Fn::GetAtt": "IsolatedSubnet\(Id).AvailabilityZone"
+				Export: Name: "Fn::Sub": "${AWS::StackName}-IsolatedSubnet\(Id)AvailabilityZone"
+			}
+			"IsolatedSubnet\(Id)RouteTableId": {
+				Value: Ref: "IsolatedSubnet\(Id)RouteTable"
+				Export: Name: "Fn::Sub": "${AWS::StackName}-IsolatedSubnet\(Id)RouteTableId"
 			}
 		}
 	}
