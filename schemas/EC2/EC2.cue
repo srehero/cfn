@@ -36,6 +36,10 @@ import (
 	Type: "AWS::EC2::NetworkAcl"
 }
 
+#PrefixList: CloudFormation.#Resource & {
+	Type: "AWS::EC2::PrefixList"
+}
+
 #Route: CloudFormation.#Resource & {
 	Type: "AWS::EC2::Route"
 }
