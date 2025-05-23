@@ -62,7 +62,7 @@ let Fnable = string | Fn
 				}
 				ManagedPolicyArns: list.Concat([
 							["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"],
-							[#Stack.TaskDefinition.ExecutionRole.ManagedPolicyArns],
+							#Stack.TaskDefinition.ExecutionRole.ManagedPolicyArns,
 				])
 				RoleName: "Fn::Sub": "${AWS::StackName}-ExecutionRole"
 			}
