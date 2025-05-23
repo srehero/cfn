@@ -1,6 +1,8 @@
 package Workers
 
 import (
+	"list"
+	
 	"github.com/srehero/cfn/schemas/CloudFormation"
 	"github.com/srehero/cfn/schemas/EC2"
 	"github.com/srehero/cfn/schemas/ECS"
@@ -58,9 +60,10 @@ let Fnable = string | Fn
 						Action: "sts:AssumeRole"
 					}]
 				}
-				ManagedPolicyArns: [
-							"arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
-				] + #Stack.TaskDefinition.ExecutionRole.ManagedPolicyArns
+				ManagedPolicyArns: list.Concat([
+							["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"],
+							[#Stack.TaskDefinition.ExecutionRole.ManagedPolicyArns],
+				])
 				RoleName: "Fn::Sub": "${AWS::StackName}-ExecutionRole"
 			}
 		}
@@ -146,9 +149,10 @@ let Fnable = string | Fn
 						Action: "sts:AssumeRole"
 					}]
 				}
-				ManagedPolicyArns: [
-							"arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
-				] + #Stack.TaskDefinition.TaskRole.ManagedPolicyArns
+				ManagedPolicyArns: list.Concat([
+							["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"],
+							[#Stack.TaskDefinition.TaskRole.ManagedPolicyArns],
+				])
 				Policies: [{
 					PolicyName:     "allow-execute-command"
 					PolicyDocument: IAM.#PolicyDocument & {
