@@ -118,7 +118,7 @@ command: "cfn.deploy": {
 			tags: ""
 		}
 
-		cmd: ["bash", "-c", "aws cloudformation deploy --stack-name \(ask_for_stack_name.response) --template-file \(create_tmp_file.stdout) \(bucket) \(tags) --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM || true"]
+		cmd: ["bash", "-c", "aws cloudformation deploy --no-execute-changeset --stack-name \(ask_for_stack_name.response) --template-file \(create_tmp_file.stdout) \(bucket) \(tags) --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM || true"]
 		$after: continue_with_deploy
 	}
 }
